@@ -8,6 +8,12 @@ spec:
         matchLabels:
             app: egis-consumer-facilities
 
+    strategy:
+        type: RollingUpdate
+        rollingUpdate:
+            maxSurge: 1
+            maxUnavailable: 0
+
     template:
         metadata:
             annotations:
@@ -26,7 +32,7 @@ spec:
                                         - egis-converter-pool
 
             serviceAccountName: egis-consumer-facilities
-            terminationGracePeriodSeconds: 36000
+            terminationGracePeriodSeconds: 43200
 
             containers:
                 - name: egis-consumer-facilities-container
@@ -55,9 +61,9 @@ spec:
                               - -c
                               - test -f /tmp/taskmessage.ready
                       initialDelaySeconds: 1
-                      periodSeconds: 2
-                      timeoutSeconds: 1
-                      failureThreshold: 1
+                      periodSeconds: 5
+                      timeoutSeconds: 5
+                      failureThreshold: 3
                       successThreshold: 1
 
                   resources:
@@ -100,7 +106,7 @@ spec:
         name: egis-consumer-facilities
 
     minReplicas: 1
-    maxReplicas: 3
+    maxReplicas: 5
 
     behavior:
         scaleDown:
